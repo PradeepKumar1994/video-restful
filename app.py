@@ -108,19 +108,32 @@ def upload_file_():
         print("Status is : {}".format(hdfs_directory_status))
         
         if(hdfs_directory_status == "200"):
+            
+            f.save(secure_filename(filename_.split(" ")[1]))
           
             print("--- Directory exists. Sending the file ---")
             
-            headers = {'Content-type': 'application/octet-stream'}
+            #headers = {'Content-type': 'application/octet-stream'}
             
-            endpoint_create_file = "http://skywalker-G7-7588:50070/webhdfs/v1/test/"+hdfs_directory_folder_check+"/"+hdfs_filename+"?op=CREATE&overwrite=true&permission=OCTAL" 
-                                                                                                                                        
+            response = requests.get("http://skywalker-G7-7588:50070/webhdfs/v1/test/"+hdfs_directory_folder_check+"/"+hdfs_filename+"?op=CREATE", allow_redirects = True)
             
-#            hdfs_saved_file = requests.put(endpoint_open_file, data = {"uploaded_file": f}) #, headers = headers
+            print(response.status_code)
             
-            #hdfs_saved_file = requests.Request('PUT', endpoint_create_file, files=f).prepare().body.decode('ascii')
+            print(response.url)
             
-            hdfs_saved_file = requests.Request('PUT', endpoint_create_file, files=f)
+            print(filename_)
+            #url_transform = endpoint_request_namenode.url.split('50070')
+            
+            #datanode_port = "50075"
+            
+            #endpoint_request_datanode = url_transform[0]+datanode_port+url_transform[1]
+            
+            #print("Datanode: ",endpoint_request_datanode)
+            
+            
+            hdfs_saved_file = requests.Request('PUT', 
+                                               url = response.url, 
+                                               files = open("/home/skywalker/Desktop/flask-movie-bag/"+ filename_.split(" ")[1], "rb"))
             
             print(hdfs_saved_file.url)
             
@@ -177,6 +190,34 @@ def get_movie(id):
 #	
 
 application.run()
+
+
+
+
+
+
+#
+#
+#
+#
+#
+#
+#
+#my_data = open("/home/skywalker/Desktop/2020-06-20_145450.mp4", "rb")
+#
+#my_file = 'http://skywalker-G7-7588:50075/webhdfs/v1/test/testuser?op=MKDIR'
+#
+#
+#a = requests.put(my_file, data=my_data)
+#
+#
+#
+
+
+
+
+
+
 
 
 
